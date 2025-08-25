@@ -556,7 +556,7 @@ PJ_DECL(pj_status_t) pjmedia_transport_srtp_stop(pjmedia_transport *srtp);
 PJ_DECL(pj_status_t) pjmedia_transport_srtp_decrypt_pkt(pjmedia_transport *tp,
                                                         pj_bool_t is_rtp,
                                                         void *pkt,
-                                                        int *pkt_len);
+                                                        pj_size_t *pkt_len);
 
 
 /**
