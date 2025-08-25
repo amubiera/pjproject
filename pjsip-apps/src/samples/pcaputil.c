@@ -231,9 +231,8 @@ static int read_rtp(pj_uint8_t *buf, pj_size_t bufsize,
         /* Decrypt SRTP */
 #if PJMEDIA_HAS_SRTP
         if (app.srtp) {
-            int len = (int)sz;
             status = pjmedia_transport_srtp_decrypt_pkt(app.srtp, PJ_TRUE,
-                                                        buf, &len);
+                                                        buf, &sz);
             if (status != PJ_SUCCESS) {
                 char errmsg[PJ_ERR_MSG_SIZE];
                 pj_strerror(status, errmsg, sizeof(errmsg));
@@ -241,7 +240,6 @@ static int read_rtp(pj_uint8_t *buf, pj_size_t bufsize,
                         errmsg);
                 continue;
             }
-            sz = len;
 
             /* Decode RTP packet again */
             status = pjmedia_rtp_decode_rtp(&app.rtp_sess, buf, (int)sz, &r,
