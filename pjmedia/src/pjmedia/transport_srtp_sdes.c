@@ -293,6 +293,11 @@ static pj_status_t sdes_media_create( pjmedia_transport *tp,
         /* Get transport protocol and drop any RTCP-FB flag */
         rem_proto = pjmedia_sdp_transport_get_proto(&m->desc.transport);
         PJMEDIA_TP_PROTO_TRIM_FLAG(rem_proto, PJMEDIA_TP_PROFILE_RTCP_FB);
+
+	    /* Drop DTLS proto if crypto is present */
+	    if (pjmedia_sdp_media_find_attr(m, &ID_CRYPTO, NULL) != NULL)
+            PJMEDIA_TP_PROTO_TRIM_FLAG(rem_proto, PJMEDIA_TP_PROTO_DTLS);
+
         if (rem_proto != PJMEDIA_TP_PROTO_RTP_AVP &&
             rem_proto != PJMEDIA_TP_PROTO_RTP_SAVP)
         {
@@ -349,6 +354,12 @@ static pj_status_t sdes_encode_sdp( pjmedia_transport *tp,
         /* Get transport protocol and drop any RTCP-FB flag */
         proto = pjmedia_sdp_transport_get_proto(&m->desc.transport);
         PJMEDIA_TP_PROTO_TRIM_FLAG(proto, PJMEDIA_TP_PROFILE_RTCP_FB);
+
+	    /* Drop DTLS proto if crypto is present */
+	    if (!srtp->offerer_side &&
+            pjmedia_sdp_media_find_attr(m, &ID_CRYPTO, NULL) != NULL)
+            PJMEDIA_TP_PROTO_TRIM_FLAG(proto, PJMEDIA_TP_PROTO_DTLS);
+
         if (proto != PJMEDIA_TP_PROTO_RTP_AVP &&
             proto != PJMEDIA_TP_PROTO_RTP_SAVP)
         {
@@ -431,6 +442,10 @@ static pj_status_t sdes_encode_sdp( pjmedia_transport *tp,
         /* Get transport protocol and drop any RTCP-FB flag */
         rem_proto = pjmedia_sdp_transport_get_proto(&m_rem->desc.transport);
         PJMEDIA_TP_PROTO_TRIM_FLAG(rem_proto, PJMEDIA_TP_PROFILE_RTCP_FB);
+
+        /* Drop DTLS proto if crypto is present */
+        if (pjmedia_sdp_media_find_attr(m_rem, &ID_CRYPTO, NULL) != NULL)
+            PJMEDIA_TP_PROTO_TRIM_FLAG(rem_proto, PJMEDIA_TP_PROTO_DTLS);
 
         /* Generate transport */
         switch (srtp->setting.use) {
@@ -672,6 +687,11 @@ static pj_status_t sdes_media_start( pjmedia_transport *tp,
         /* Get transport protocol and drop any RTCP-FB flag */
         rem_proto = pjmedia_sdp_transport_get_proto(&m_rem->desc.transport);
         PJMEDIA_TP_PROTO_TRIM_FLAG(rem_proto, PJMEDIA_TP_PROFILE_RTCP_FB);
+
+	    /* Drop DTLS proto if crypto is present */
+	    if (pjmedia_sdp_media_find_attr(m_rem, &ID_CRYPTO, NULL) != NULL)
+            PJMEDIA_TP_PROTO_TRIM_FLAG(rem_proto, PJMEDIA_TP_PROTO_DTLS);
+
         if (rem_proto != PJMEDIA_TP_PROTO_RTP_AVP &&
             rem_proto != PJMEDIA_TP_PROTO_RTP_SAVP)
         {
